@@ -5,7 +5,9 @@ const filePath = "./node_modules/country-json/src/country-by-capital-city.json";
 
 cityRouter.get("/", (req, res) => {
   fs.readFile(filePath, (err, data) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(400).send({ error: "cannot open file" });
+    }
 
     let inputCountry = req.query.country;
 
@@ -14,7 +16,7 @@ cityRouter.get("/", (req, res) => {
       (c) => c.country.toLowerCase() === inputCountry.toLowerCase()
     );
 
-    if (!err && country) {
+    if (country) {
       res.send(`Capital of Latvia is ${country.city}`);
     } else {
       res.sendStatus(400);
